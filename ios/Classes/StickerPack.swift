@@ -173,6 +173,18 @@ class StickerPack {
         stickers.append(sticker)
     }
 
+    /// Convert UIImage to base64 string
+    func convertImageToBase64(image: UIImage) -> String {
+        let imageData : Data = image.pngData()!
+        return imageData.base64EncodedString()
+    }
+
+    func convertDataToBase64(image: Data) -> String {
+        return image.base64EncodedString()
+    }
+
+  
+
     /**
      *  Sends current sticker pack to WhatsApp.
      *
@@ -186,14 +198,14 @@ class StickerPack {
             json["identifier"] = self.identifier
             json["name"] = self.name
             json["publisher"] = self.publisher
-            json["tray_image"] = UIImagePNGRepresentation(self.trayImage.image!)?.base64EncodedString()
+            json["tray_image"] = self.convertImageToBase64(image: self.trayImage.image!)
 
             var stickersArray: [[String: Any]] = []
             for sticker in self.stickers {
                 var stickerDict: [String: Any] = [:]
 
                 if let imageData = sticker.imageData.webpData {
-                    stickerDict["image_data"] = imageData.base64EncodedString()
+                    stickerDict["image_data"] = self.convertDataToBase64(image: imageData)
                 } else {
                     print("Skipping bad sticker data")
                     continue
@@ -212,3 +224,4 @@ class StickerPack {
         }
     }
 }
+
